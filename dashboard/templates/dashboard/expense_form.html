@@ -1,0 +1,55 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Add Expense{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="fas fa-plus-circle"></i> Add New Expense</h2>
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Title *</label>
+                        <input type="text" name="title" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Amount (₹) *</label>
+                        <input type="number" name="amount" class="form-control" step="0.01" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Category *</label>
+                        <select name="category" class="form-select" required>
+                            <option value="">Select Category</option>
+                            <option value="OFFICE">Office Supplies</option>
+                            <option value="TRAVEL">Travel</option>
+                            <option value="UTILITIES">Utilities</option>
+                            <option value="SALARY">Salary</option>
+                            <option value="MARKETING">Marketing</option>
+                            <option value="OTHER">Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Date *</label>
+                        <input type="date" name="date" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-control" rows="4"></textarea>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Expense
+                        </button>
+                        <a href="{% url 'expense_list' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

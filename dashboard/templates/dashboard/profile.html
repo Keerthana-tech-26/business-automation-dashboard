@@ -1,0 +1,89 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="fas fa-user"></i> User Profile</h2>
+
+{% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-success alert-dismissible fade show">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}
+{% endif %}
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-user-circle"></i> Profile Information</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" class="form-control" value="{{ user.username }}" disabled>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" value="{{ user.email }}" disabled>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Role</label>
+                        <input type="text" class="form-control" value="{{ profile.get_role_display }}" disabled>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Department</label>
+                        <input type="text" name="department" class="form-control" value="{{ profile.department }}">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Phone</label>
+                        <input type="text" name="phone" class="form-control" value="{{ profile.phone }}">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Update Profile
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card shadow-sm mb-3">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-download"></i> Export Data</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Download your data as CSV files</p>
+                <div class="d-grid gap-2">
+                    <a href="{% url 'export_expenses' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-file-csv"></i> Export Expenses to CSV
+                    </a>
+                    <a href="{% url 'export_invoices' %}" class="btn btn-outline-success">
+                        <i class="fas fa-file-csv"></i> Export Invoices to CSV
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-info-circle"></i> Account Statistics</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Member Since:</strong> {{ user.date_joined|date:"F d, Y" }}</p>
+                <p><strong>Last Login:</strong> {{ user.last_login|date:"F d, Y H:i" }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

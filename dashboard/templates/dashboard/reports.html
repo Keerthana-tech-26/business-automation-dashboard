@@ -1,0 +1,144 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Financial Reports{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="fas fa-chart-bar"></i> Financial Reports & Analytics</h2>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-pie-chart"></i> Expenses by Category</h5>
+            </div>
+            <div class="card-body">
+                {% if expense_by_category %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Count</th>
+                            <th>Total Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in expense_by_category %}
+                        <tr>
+                            <td>
+                                {% if item.category == 'OFFICE' %}Office Supplies
+                                {% elif item.category == 'TRAVEL' %}Travel
+                                {% elif item.category == 'UTILITIES' %}Utilities
+                                {% elif item.category == 'SALARY' %}Salary
+                                {% elif item.category == 'MARKETING' %}Marketing
+                                {% else %}Other{% endif %}
+                            </td>
+                            <td><span class="badge bg-info">{{ item.count }}</span></td>
+                            <td><strong>₹{{ item.total|floatformat:2 }}</strong></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="text-muted">No expense data available.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-chart-pie"></i> Invoices by Status</h5>
+            </div>
+            <div class="card-body">
+                {% if invoice_by_status %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Count</th>
+                            <th>Total Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in invoice_by_status %}
+                        <tr>
+                            <td>
+                                {% if item.status == 'DRAFT' %}Draft
+                                {% elif item.status == 'SENT' %}Sent
+                                {% elif item.status == 'PAID' %}Paid
+                                {% else %}Overdue{% endif %}
+                            </td>
+                            <td><span class="badge bg-warning">{{ item.count }}</span></td>
+                            <td><strong>₹{{ item.total|floatformat:2 }}</strong></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="text-muted">No invoice data available.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-header bg-info text-white">
+        <h5 class="mb-0"><i class="fas fa-chart-line"></i> Monthly Trends (Last 6 Months)</h5>
+    </div>
+    <div class="card-body">
+        <canvas id="monthlyChart" height="80"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const monthlyData = JSON.parse('{{ monthly_data_json|escapejs }}');
+    const ctx = document.getElementById('monthlyChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: monthlyData.map(item => item.month),
+            datasets: [
+                {
+                    label: 'Expenses (₹)',
+                    data: monthlyData.map(item => item.expenses),
+                    borderColor: 'rgb(255, 99, 132)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                    tension: 0.3
+                },
+                {
+                    label: 'Invoices (₹)',
+                    data: monthlyData.map(item => item.invoices),
+                    borderColor: 'rgb(54, 162, 235)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                    tension: 0.3
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Expenses vs Invoices Trend'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return '₹' + value.toLocaleString();
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

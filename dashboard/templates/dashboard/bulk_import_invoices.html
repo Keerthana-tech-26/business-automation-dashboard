@@ -1,0 +1,68 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Bulk Import Invoices{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="fas fa-upload"></i> Bulk Import Invoices</h2>
+
+{% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{% if 'Success' in message %}success{% else %}danger{% endif %} alert-dismissible fade show">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}
+{% endif %}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-file-csv"></i> Upload CSV File</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Select CSV File</label>
+                        <input type="file" name="csv_file" class="form-control" accept=".csv" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-upload"></i> Upload & Import
+                    </button>
+                    <a href="{% url 'invoice_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-info-circle"></i> CSV Format Instructions</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Your CSV file must have these columns (in this exact order):</strong></p>
+                <ul>
+                    <li><code>invoice_number</code> - Unique invoice number (e.g., INV-2024-001)</li>
+                    <li><code>client_name</code> - Client/company name</li>
+                    <li><code>client_email</code> - Client email address</li>
+                    <li><code>amount</code> - Amount in numbers (e.g., 50000.00)</li>
+                    <li><code>status</code> - One of: DRAFT, SENT, PAID, OVERDUE</li>
+                    <li><code>issue_date</code> - Date in YYYY-MM-DD format</li>
+                    <li><code>due_date</code> - Date in YYYY-MM-DD format</li>
+                    <li><code>description</code> - Invoice description</li>
+                </ul>
+                
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i> <strong>Important:</strong> Column names must match exactly (lowercase).
+                </div>
+                
+                <h6 class="mt-4">Example CSV Content:</h6>
+                <pre class="bg-light p-3">invoice_number,client_name,client_email,amount,status,issue_date,due_date,description
+INV-2024-004,ABC Corporation,contact@abc.com,125000.00,SENT,2024-10-25,2024-11-25,Website development services</pre>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

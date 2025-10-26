@@ -1,0 +1,66 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Bulk Import Expenses{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="fas fa-upload"></i> Bulk Import Expenses</h2>
+
+{% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{% if 'Success' in message %}success{% else %}danger{% endif %} alert-dismissible fade show">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}
+{% endif %}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-file-csv"></i> Upload CSV File</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Select CSV File</label>
+                        <input type="file" name="csv_file" class="form-control" accept=".csv" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-upload"></i> Upload & Import
+                    </button>
+                    <a href="{% url 'expense_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-info-circle"></i> CSV Format Instructions</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Your CSV file must have these columns (in this exact order):</strong></p>
+                <ul>
+                    <li><code>title</code> - Expense title/name</li>
+                    <li><code>amount</code> - Amount in numbers (e.g., 5000.00)</li>
+                    <li><code>category</code> - One of: OFFICE, TRAVEL, UTILITIES, SALARY, MARKETING, OTHER</li>
+                    <li><code>date</code> - Date in YYYY-MM-DD format (e.g., 2024-10-25)</li>
+                    <li><code>description</code> - Description (optional)</li>
+                </ul>
+                
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i> <strong>Important:</strong> Column names must match exactly (lowercase).
+                </div>
+                
+                <h6 class="mt-4">Example CSV Content:</h6>
+                <pre class="bg-light p-3">title,amount,category,date,description
+Office Chairs,15000.00,OFFICE,2024-10-25,Ergonomic chairs for team
+Flight Tickets,8500.00,TRAVEL,2024-10-24,Mumbai business trip</pre>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
