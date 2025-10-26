@@ -80,7 +80,7 @@ business_automation_dashboard/
 └── db.sqlite3                # SQLite database
 ```
 ### Main Dashboard
-![Dashboard Overview](ashboard_overview.png)
+![Dashboard Overview](dashboard_overview.png)
 
 ## Key Features Explained
 
@@ -144,7 +144,7 @@ REST API endpoints for connecting to Power BI:
 - Use manual refresh in Power BI Desktop
 - For automatic refresh, publish to Power BI Service with scheduled refresh
 
-## 🎓 Learning Outcomes
+## Learning Outcomes
 This project demonstrates:
 - Full-stack web development with Django
 - Database design and SQL operations
