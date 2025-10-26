@@ -20,7 +20,7 @@ A full-stack web application designed to automate and streamline core business o
 - Git
 - Power BI Desktop (optional, for dashboard viewing)
 
-## 🔧 Installation & Setup
+## Installation & Setup
 
 ### Step 1: Clone the Repository
 ```bash
